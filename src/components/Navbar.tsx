@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Wallet } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/ensiklopedia", label: "ENSIKLOPEDIA" },
@@ -44,11 +44,6 @@ export default function Navbar() {
           ))}
         </div>
 
-        <button className="hidden md:flex items-center gap-2 px-8 py-3 bg-bark text-sand text-xs font-bold tracking-widest rounded-full hover:bg-gold hover:text-bark hover:shadow-lg hover:-translate-y-1 transition-all duration-300 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold">
-          <Wallet className="w-4 h-4" aria-hidden="true" />
-          CONNECT WALLET
-        </button>
-
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -74,10 +69,6 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <button className="mt-3 mb-2 flex items-center justify-center gap-2 px-6 py-3 bg-bark text-sand text-xs font-bold tracking-widest rounded-full">
-              <Wallet className="w-4 h-4" aria-hidden="true" />
-              CONNECT WALLET
-            </button>
           </div>
         </div>
       )}

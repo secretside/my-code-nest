@@ -1,15 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { sanityFetch, urlForImage } from "@/lib/sanity";
+import PageSkeleton from "@/components/PageSkeleton";
+import { urlForImage } from "@/lib/sanity";
+import { aksaraListQueryOptions } from "@/lib/sanityQueries";
 
-interface AksaraItem {
-  name: string;
-  origin: string;
-  slug: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  visual: any;
-}
 
 export const Route = createFileRoute("/ensiklopedia/")({
   head: () => ({
@@ -27,17 +23,19 @@ export const Route = createFileRoute("/ensiklopedia/")({
       },
     ],
   }),
-  loader: async () => {
-    const data = await sanityFetch<AksaraItem[]>(
-      `*[_type == "aksara"]{ name, origin, "slug": slug.current, visual }`,
-    );
-    return data ?? [];
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(aksaraListQueryOptions),
+  pendingMs: 100,
+  pendingComponent: () => <PageSkeleton cards={6} />,
+  errorComponent: ({ error }) => (
+    <div role="alert" className="pt-40 text-center text-clay">
+      {error.message}
+    </div>
+  ),
   component: EnsiklopediaPage,
 });
 
 function EnsiklopediaPage() {
-  const aksaras = Route.useLoaderData();
+  const { data: aksaras } = useSuspenseQuery(aksaraListQueryOptions);
 
   return (
     <main className="relative min-h-screen bg-cream text-ink selection:bg-gold selection:text-parchment">

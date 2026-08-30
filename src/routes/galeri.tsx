@@ -17,16 +17,10 @@ import {
 import {
   ChevronDown
 } from "lucide-react";
-import { sanityFetch } from "@/lib/sanity";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import PageSkeleton from "@/components/PageSkeleton";
+import { prasastiListQueryOptions } from "@/lib/sanityQueries";
 
-interface PrasastiItem {
-  name: string;
-  message: string;
-  scriptType: string;
-  txHash: string;
-  txUrl: string;
-  timestamp: string;
-}
 
 interface GalleryFilters {
   scriptType: "all" | "javanese" | "sundanese" | "balinese" | "makassar";
@@ -48,17 +42,19 @@ export const Route = createFileRoute("/galeri")({
       },
     ],
   }),
-  loader: async () => {
-    // Build the GROQ query: fetch all prasasti, ordered by timestamp desc
-    const queryStr = `*[_type == "prasasti"] { name, message, scriptType, txHash, txUrl, timestamp } | order(timestamp desc)`;
-    const data = await sanityFetch<PrasastiItem[]>(queryStr);
-    return { prasasti: data ?? [] };
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(prasastiListQueryOptions),
+  pendingMs: 100,
+  pendingComponent: () => <PageSkeleton cards={6} />,
+  errorComponent: ({ error }) => (
+    <div role="alert" className="pt-40 text-center text-clay">
+      {error.message}
+    </div>
+  ),
   component: GaleriPage,
 });
 
 function GaleriPage() {
-  const { prasasti } = Route.useLoaderData();
+  const { data: prasasti } = useSuspenseQuery(prasastiListQueryOptions);
   const search = useSearch();
   const scriptType = (search.scriptType as GalleryFilters) ?? "all";
 
