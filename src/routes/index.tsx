@@ -1,34 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Hero, { type HeroData } from "@/components/Hero";
-import { sanityFetch, urlForImage } from "@/lib/sanity";
+import Hero from "@/components/Hero";
+import PageSkeleton from "@/components/PageSkeleton";
+import { urlForImage } from "@/lib/sanity";
+import { homeQueryOptions } from "@/lib/sanityQueries";
 
-interface AksaraItem {
-  name: string;
-  origin: string;
-  slug: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  visual: any;
-}
-
-interface GaleriItem {
-  title: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  image: any;
-}
-
-interface HomeData {
-  home: (HeroData & { aboutTitle?: string; aboutContent?: string }) | null;
-  aksara: AksaraItem[];
-  galeri: GaleriItem[];
-}
-
-const HOME_QUERY = `{
-  "home": *[_type == "homepage"][0],
-  "aksara": *[_type == "aksara"][0...3]{ name, origin, "slug": slug.current, visual },
-  "galeri": *[_type == "galeri"][0...3]{ title, image }
-}`;
 
 export const Route = createFileRoute("/")({
   head: () => ({

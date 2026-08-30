@@ -1,31 +1,22 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { PortableText } from "@portabletext/react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { sanityFetch, urlForImage } from "@/lib/sanity";
-
-interface AksaraDetail {
-  name: string;
-  origin: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  visual: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  description: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  content: any;
-  audio?: string;
-}
+import PageSkeleton from "@/components/PageSkeleton";
+import { urlForImage } from "@/lib/sanity";
+import { aksaraDetailQueryOptions } from "@/lib/sanityQueries";
 
 export const Route = createFileRoute("/ensiklopedia/$slug")({
-  loader: async ({ params }) => {
-    const data = await sanityFetch<AksaraDetail | null>(
-      `*[_type == "aksara" && slug.current == $slug][0]{
-        name, origin, visual, description, content, "audio": pronunciation.asset->url
-      }`,
-      { slug: params.slug },
-    );
-    return data;
-  },
+  loader: ({ context, params }) =>
+    context.queryClient.ensureQueryData(aksaraDetailQueryOptions(params.slug)),
+  pendingMs: 100,
+  pendingComponent: () => <PageSkeleton detail />,
+  errorComponent: ({ error }) => (
+    <div role="alert" className="pt-40 text-center text-clay">
+      {error.message}
+    </div>
+  ),
   head: ({ loaderData }) => {
     const name = loaderData?.name ?? "Detail Aksara";
     const title = `${name} | Ensiklopedia Aksara Abadi`;
@@ -43,7 +34,8 @@ export const Route = createFileRoute("/ensiklopedia/$slug")({
 });
 
 function DetailAksaraPage() {
-  const data = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { data } = useSuspenseQuery(aksaraDetailQueryOptions(slug));
 
   if (!data) {
     return (
