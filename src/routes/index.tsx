@@ -7,7 +7,6 @@ import PageSkeleton from "@/components/PageSkeleton";
 import { urlForImage } from "@/lib/sanity";
 import { homeQueryOptions } from "@/lib/sanityQueries";
 
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -24,15 +23,16 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
-  loader: async (): Promise<HomeData> => {
-    const data = await sanityFetch<HomeData>(HOME_QUERY);
-    return { home: data?.home ?? null, aksara: data?.aksara ?? [], galeri: data?.galeri ?? [] };
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(homeQueryOptions),
+  pendingMs: 100,
+  pendingComponent: () => <PageSkeleton cards={3} />,
   component: Index,
 });
 
 function Index() {
-  const { home, aksara, galeri } = Route.useLoaderData();
+  const {
+    data: { home, aksara, galeri },
+  } = useSuspenseQuery(homeQueryOptions);
 
   return (
     <main className="bg-white selection:bg-gold selection:text-ink">
