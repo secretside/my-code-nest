@@ -1,12 +1,12 @@
-# My Code Nest
+# Project Bloom
 
-make a repo on github
+can you continue developing for my existing project?
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/795499ad-c246-4576-956b-7394c3b0797e).
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/66d044cd-0264-4410-9d57-8104b8d4fc57).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
 - **Stay in sync**: every change made in Lovable is committed straight to this repository.
