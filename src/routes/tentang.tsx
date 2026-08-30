@@ -35,12 +35,6 @@ const TEAM = [
     bio: "[Deskripsi singkat anggota 2 — misalnya latar belakang, minat pada budaya, atau kontribusinya pada proyek ini.]",
     inisial: "A2",
   },
-  {
-    nama: "[Nama Anggota 3]",
-    peran: "Riset Aksara & Konten",
-    bio: "[Deskripsi singkat anggota 3 — misalnya latar belakang, minat pada budaya, atau kontribusinya pada proyek ini.]",
-    inisial: "A3",
-  },
 ];
 
 const NILAI = [
@@ -68,7 +62,7 @@ const STATISTIK = [
   { angka: "[3]+", label: "Aksara Terdokumentasi" },
   { angka: "[100]+", label: "Prasasti Dibuat" },
   { angka: "[2026]", label: "Tahun Berdiri" },
-  { angka: "[3]", label: "Anggota Tim" },
+  { angka: "[2]", label: "Anggota Tim" },
 ];
 
 function TentangPage() {
@@ -149,10 +143,10 @@ function TentangPage() {
             </span>
             <h2 className="font-serif text-4xl font-bold text-ink mb-4">Tim Kami</h2>
             <p className="text-clay max-w-xl mx-auto">
-              Tiga orang dengan satu tujuan: memastikan aksara Nusantara tetap hidup di era digital.
+              Dua orang dengan satu tujuan: memastikan aksara Nusantara tetap hidup di era digital.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
             {TEAM.map((anggota) => (
               <div
                 key={anggota.nama}
